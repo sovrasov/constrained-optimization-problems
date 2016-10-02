@@ -2,9 +2,10 @@
 #define PROBLEM_GENERATOR_HPP
 
 #include <vector>
+#include <cmath>
 #include "constrained_problem.hpp"
 
-enum GenerateMode { RHS = 0, DELTA = 1 }
+enum GenerateMode { RHS = 0, DELTA = 1 };
 
 template <class FType>
 class ConstrainedProblemGenerator
@@ -20,43 +21,43 @@ protected:
   {
     double q;
     //double hmin, double minInGlobal, double Epsilon, int m
-    double Epsilon = 0.01, int m = 100
+    double Epsilon = 0.01; int m = 100;
     int dimension = function->GetDimension();
     double hmin = function->GetOptimalValue();
 
     double hmax = hmin;
     double d = 0;
     //многомерная решетка, в узлах - испытания,
-    int* size = new int[mDimension];//кол-во колво точек на размерность
-    double* step = new double[mDimension];//шаг по каждой размерности
+    int* size = new int[dimension];//кол-во колво точек на размерность
+    double* step = new double[dimension];//шаг по каждой размерности
     int sumn = 1;//число испытаний
 
-    double* a = new double[mDimension];
-    double* b = new double[mDimension];
+    double* a = new double[dimension];
+    double* b = new double[dimension];
     function->GetDomainBounds(a, b);
-    for (unsigned i = 0; i < mDimension; i++)
+    for (unsigned i = 0; i < dimension; i++)
     {
       d = (b[i] - a[i]);
-      size[i] = (int)ceil(d / Epsilon) + 1;
+      size[i] = (int)ceil(d / Epsilon) + 1;//(int)ceil(d / Epsilon) + 1;
       step[i] = d / (size[i] - 1);
       sumn *= (size[i]);
     }
     double* f = new double[sumn];//значение функции
-    double* y = new double[mDimension];
+    double* y = new double[dimension];
     //#pragma omp parallel for num_threads(parameters.NumThread)
     for (int i = 0; i < sumn; i++)
     {
       double w;
       int z = i;
       //Вычисляе координаты точек испытания
-      for (unsigned j = 0; j < mDimension; j++)
+      for (unsigned j = 0; j < dimension; j++)
       {
         w = z % size[j];//определяем номер узла на i-ой размерносте
         y[j] = a[j] + w * step[j];//левая граница + номер узла на i-ой размерносте * шаг на i-ой размерносте
         z = z / size[j];//для вычисления номера узла на следующей оазмерносте
       }
       //проводим испытание
-      f[i] = EvaluateDFunction(y);
+      f[i] = mPObjective->Calculate(y);
       if (f[i] > hmax)
         hmax = f[i];
       if (f[i] < hmin)
@@ -145,7 +146,6 @@ public:
       mNeedTuneParam.push_back(true);
     else
       mNeedTuneParam.push_back(false);
-    };
   }
 
   void SetObjective(FType* function)
@@ -155,13 +155,13 @@ public:
 
   ConstrainedProblem<FType> GenerateProblem()
   {
-    for(size_t i = 0; i < mPConstraints.size(); i++)
+    for(unsigned i = 0; i < mPConstraints.size(); i++)
     {
       if(mNeedTuneParam[i])
         mConstraintsParams[i] = EvaluateRHS(mPConstraints[i], mConstraintsParams[i]);
     }
 
-    return ConstrainedProblem(mPObjective, mPConstraints, mConstraintsParams);
+    return ConstrainedProblem<FType>(mPObjective, mPConstraints, mConstraintsParams);
   }
 };
 

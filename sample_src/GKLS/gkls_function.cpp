@@ -1,4 +1,4 @@
-#include "gkls_function.h"
+#include "gkls_function.hpp"
 #include <cassert>
 #include <cmath>
 #include <cstdlib>

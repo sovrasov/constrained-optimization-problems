@@ -1,7 +1,7 @@
-#ifndef __GKLS_FUNCTION_H__
-#define __GKLS_FUNCTION_H__
+#ifndef __GKLS_FUNCTION_HPP__
+#define __GKLS_FUNCTION_HPP__
 
-#include "gkls_random.h"
+#include "gkls_random.hpp"
 
 #define PROPERTY(T, N)     \
 	T Get ## N() const;     \

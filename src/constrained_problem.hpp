@@ -19,12 +19,12 @@ public:
   {
     mPConstraints = constraints;
     mPObjective = objective;
-    mpConstraintsParams = parameters;
+    mConstraintsParams = parameters;
   }
 
   double GetFunctionRHS(int fNumber) const
   {
-    return mConstraintsParams[i];
+    return mConstraintsParams[fNumber];
   }
 
   int GetConstraintsNumber() const
@@ -34,7 +34,7 @@ public:
 
   double CalculateFunction(const double* y, int fNumber)
   {
-    if(funcNumber != static_cast<int>(mPConstraints.size()))
+    if(fNumber != static_cast<int>(mPConstraints.size()))
       return mPConstraints[fNumber]->Calculate(y) - mConstraintsParams[fNumber];
     else
       return mPObjective->Calculate(y);

@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <cassert>
 
-#include "grishagin_function.h"
+#include "grishagin_function.hpp"
 
 using namespace vagrisfunction;
 

@@ -1,5 +1,5 @@
-#ifndef __GKLS_RANDOM_H__
-#define __GKLS_RANDOM_H__
+#ifndef __GKLS_RANDOM_HPP__
+#define __GKLS_RANDOM_HPP__
 
 namespace gklsfunction
 {

@@ -1,4 +1,4 @@
-#include "gkls_random.h"
+#include "gkls_random.hpp"
 
 using namespace gklsfunction::randomgenerator;
 
