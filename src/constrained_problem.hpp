@@ -4,31 +4,40 @@
 #include <vector>
 
 template <class FType>
-  class ConstrainedProblem
+class ConstrainedProblem
 {
 protected:
 
+  FType* mPObjective;
+  std::vector<FType*> mPConstraints;
+  std::vector<double> mConstraintsParams;
+
 public:
   explicit ConstrainedProblem(FType* objective,
-                              std::vector<FType*>& constraints,
-                              std::vector<double>& parameters)
+                              const std::vector<FType*>& constraints,
+                              const std::vector<double>& parameters)
   {
-
+    mPConstraints = constraints;
+    mPObjective = objective;
+    mpConstraintsParams = parameters;
   }
 
   double GetFunctionRHS(int fNumber) const
   {
-    return 0.;
+    return mConstraintsParams[i];
   }
 
   int GetConstraintsNumber() const
   {
-    return 0;
+    return static_cast<int>(mPConstraints.size());
   }
 
-  double EvaluateFunction(const double* y, int fNumber)
+  double CalculateFunction(const double* y, int fNumber)
   {
-    return 0.;
+    if(funcNumber != static_cast<int>(mPConstraints.size()))
+      return mPConstraints[fNumber]->Calculate(y) - mConstraintsParams[fNumber];
+    else
+      return mPObjective->Calculate(y);
   }
 };
 

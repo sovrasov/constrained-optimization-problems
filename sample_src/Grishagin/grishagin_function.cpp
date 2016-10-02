@@ -179,7 +179,7 @@ double GrishaginFunction::GetOptimalValue() const
 {
   double y[2];
   GetOptimumCoordinates(y);
-  return EvaluateFunction(y);
+  return Calculate(y);
 }
 
 void GrishaginFunction::GetDomainBounds(double* lb, double* ub) const
@@ -193,7 +193,7 @@ int GrishaginFunction::GetDimension() const
   return 2;
 }
 
-double GrishaginFunction::EvaluateFunction(const double* y) const
+double GrishaginFunction::Calculate(const double* y) const
 {
   int i, j;
   double d1, d2, sx1, cx1, sy1, cy1;
@@ -225,7 +225,7 @@ double GrishaginFunction::EvaluateFunction(const double* y) const
   return(-sqrt(d1*d1 + d2*d2));
 }
 
-double GrishaginFunction::EvaluateXDerivative(const double* y) const
+double GrishaginFunction::CalculateXDerivative(const double* y) const
 {
   int i, j;
   double dd, d1, d2, t1, t2, sx1, cx1, sy1, cy1;
@@ -267,7 +267,7 @@ double GrishaginFunction::EvaluateXDerivative(const double* y) const
   return(-(t1*d1 + t2*d2) / dd);
 }
 
-double GrishaginFunction::EvaluateYDerivative(const double* y) const
+double GrishaginFunction::CalculateYDerivative(const double* y) const
 {
   int i, j;
   double dd, d1, d2, t1, t2, sx1, cx1, sy1, cy1;

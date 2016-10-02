@@ -1,7 +1,7 @@
 #ifndef __GRISHAGIN_FUNCTION_H__
 #define __GRISHAGIN_FUNCTION_H__
 
-#define PROPERTY(T, N)     \
+#define PROPERTY(T, N)    \
   T Get ## N() const;     \
   void Set ## N(T value);
 
@@ -23,9 +23,9 @@ namespace vagrisfunction {
 
     PROPERTY(int, FunctionNumber);
 
-    double EvaluateFunction(const double* y) const;
-    double EvaluateXDerivative(const double* y) const;
-    double EvaluateYDerivative(const double* y) const;
+    double Calculate(const double* y) const;
+    double CalculateXDerivative(const double* y) const;
+    double CalculateYDerivative(const double* y) const;
 
     void GetOptimumCoordinates(double* y) const;
     double GetOptimalValue() const;
