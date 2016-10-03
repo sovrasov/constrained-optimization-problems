@@ -115,6 +115,23 @@ void GKLSFunction::SetDefaultParameters()
 
   GKLS_global_value = GKLS_GLOBAL_MIN_VALUE;
 }
+
+void GKLSFunction::SetParameters(GKLSParameters params)
+{
+  GKLS_dim = params.dimension;
+  GKLS_global_value = params.globalMinimumValue;
+  GKLS_num_minima = params.numberOfLocalMinima;
+  GKLS_global_dist = params.globalDistance;
+  GKLS_global_radius = params.globalRadius;
+}
+
+GKLSParameters GKLSFunction::GetParameters() const
+{
+  return GKLSParameters(GKLS_dim, GKLS_global_value, GKLS_num_minima,
+                        GKLS_global_dist, GKLS_global_radius);
+}
+
+
 void GKLSFunction::SetFunctionClass(GKLSClass type, unsigned classDimension)
 {
   assert(classDimension > 1);
@@ -970,4 +987,12 @@ int GKLSFunction::GetGlobalMinimumPoint(double* argmin) const
   }
   else
     return -1;
+}
+void GKLSFunction::GetDomainBounds(double* lowerBound, double* upperBound)
+{
+  for(unsigned i = 0; i < GKLS_dim; i++)
+  {
+    lowerBound[i] = GKLS_domain_left[i];
+    upperBound[i] = GKLS_domain_right[i];
+  }
 }

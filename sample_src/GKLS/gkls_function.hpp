@@ -78,6 +78,25 @@ namespace gklsfunction
 
   enum GKLSClass { Hard, Simple };
 
+	struct GKLSParameters
+	{
+		unsigned dimension;
+    double globalMinimumValue;
+    unsigned numberOfLocalMinima;
+    double globalDistance;
+    double globalRadius;
+
+		GKLSParameters() {}
+		GKLSParameters(unsigned _dimension, double _globalMinimumValue,
+									 unsigned _numberOfLocalMinima, double _globalDistance,
+								 	 double _globalRadius) : dimension(_dimension),
+									 globalMinimumValue(_globalMinimumValue),
+									 numberOfLocalMinima(_numberOfLocalMinima),
+									 globalDistance(_globalDistance),
+									 globalRadius(_globalRadius)
+		{}
+	};
+
   class GKLSFunction {
 
   private:
@@ -139,6 +158,7 @@ namespace gklsfunction
     PROPERTY(unsigned, NumberOfLocalMinima);
     PROPERTY(double, GlobalDistance);
     PROPERTY(double, GlobalRadius);
+		PROPERTY(GKLSParameters, Parameters);
 
     void SetDefaultParameters();
     int CheckParameters() const;
@@ -158,6 +178,7 @@ namespace gklsfunction
     int EvaluateD2FunctionHessian(const double* x, double** h) const;
 
     int GetGlobalMinimumPoint(double* argmin) const;
+		void GetDomainBounds(double* lowerBound, double* upperBound);
   };
 }
 #endif

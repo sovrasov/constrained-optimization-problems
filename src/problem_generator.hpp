@@ -2,6 +2,7 @@
 #define PROBLEM_GENERATOR_HPP
 
 #include <vector>
+#include <iostream>
 #include <cmath>
 #include "constrained_problem.hpp"
 
@@ -57,7 +58,7 @@ protected:
         z = z / size[j];//для вычисления номера узла на следующей оазмерносте
       }
       //проводим испытание
-      f[i] = mPObjective->Calculate(y);
+      f[i] = function->Calculate(y);
       if (f[i] > hmax)
         hmax = f[i];
       if (f[i] < hmin)
@@ -155,10 +156,11 @@ public:
 
   ConstrainedProblem<FType> GenerateProblem()
   {
+    double objectiveMinVal = mPObjective->GetOptimalValue();
     for(unsigned i = 0; i < mPConstraints.size(); i++)
     {
       if(mNeedTuneParam[i])
-        mConstraintsParams[i] = EvaluateRHS(mPConstraints[i], mConstraintsParams[i]);
+        mConstraintsParams[i] = EvaluateRHS(mPConstraints[i], mConstraintsParams[i], objectiveMinVal);
     }
 
     return ConstrainedProblem<FType>(mPObjective, mPConstraints, mConstraintsParams);
