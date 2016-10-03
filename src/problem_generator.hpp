@@ -2,7 +2,6 @@
 #define PROBLEM_GENERATOR_HPP
 
 #include <vector>
-#include <iostream>
 #include <cmath>
 #include "constrained_problem.hpp"
 
@@ -21,7 +20,6 @@ protected:
   double EvaluateRHS(FType* function, double delta, double objectiveMin)
   {
     double q;
-    //double hmin, double minInGlobal, double Epsilon, int m
     double Epsilon = 0.01; int m = 100;
     int dimension = function->GetDimension();
     double hmin = function->GetOptimalValue();
