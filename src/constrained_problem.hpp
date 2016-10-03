@@ -27,6 +27,16 @@ public:
     return mConstraintsParams[fNumber];
   }
 
+  int GetDimension() const
+  {
+    return static_cast<int>(mPObjective->GetDimension());
+  }
+
+  void GetBounds(double *lb, double* ub)
+  {
+    mPObjective->GetBounds(lb, ub);
+  }
+
   int GetConstraintsNumber() const
   {
     return static_cast<int>(mPConstraints.size());
