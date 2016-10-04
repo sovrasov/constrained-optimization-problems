@@ -13,6 +13,7 @@ GKLSFunction::GKLSFunction()
   mFunctionNumber = 0;
   mIsDomainMemeoryAllocated = false;
   mIsGeneratorMemoryAllocated = false;
+  mFunctionType = TD;
   rnd_num = new double[NUM_RND];
   rand_condition = new double[KK];
 }
@@ -51,11 +52,11 @@ unsigned GKLSFunction::GetDimension() const
 {
   return mDimension;
 }
-void GKLSFunction::SetGlobalMinimumValue(double value)
+void GKLSFunction::SetOptimalValue(double value)
 {
   GKLS_global_value = value;
 }
-double GKLSFunction::GetGlobalMinimumValue() const
+double GKLSFunction::GetOptimalValue() const
 {
   return GKLS_global_value;
 }
@@ -82,6 +83,14 @@ void GKLSFunction::SetGlobalRadius(double value)
 double GKLSFunction::GetGlobalRadius() const
 {
   return GKLS_global_dist;
+}
+void GKLSFunction::SetType(GKLSFuncionType type)
+{
+  mFunctionType = type;
+}
+GKLSFuncionType GKLSFunction::GetType() const
+{
+  return mFunctionType;
 }
 void GKLSFunction::SetDefaultParameters()
 {
@@ -123,14 +132,33 @@ void GKLSFunction::SetParameters(GKLSParameters params)
   GKLS_num_minima = params.numberOfLocalMinima;
   GKLS_global_dist = params.globalDistance;
   GKLS_global_radius = params.globalRadius;
+  mFunctionType = params.type;
 }
 
 GKLSParameters GKLSFunction::GetParameters() const
 {
   return GKLSParameters(GKLS_dim, GKLS_global_value, GKLS_num_minima,
-                        GKLS_global_dist, GKLS_global_radius);
+                        GKLS_global_dist, GKLS_global_radius, mFunctionType);
 }
 
+double GKLSFunction::Calculate(const double* x) const
+{
+  double value = 0.;
+
+  switch(mFunctionType)
+  {
+  case TND:
+    value = CalculateNDFunction(x);
+    break;
+  case TD:
+    value = CalculateDFunction(x);
+    break;
+  case TD2:
+    value = CalculateD2Function(x);
+  }
+
+  return value;
+}
 
 void GKLSFunction::SetFunctionClass(GKLSClass type, unsigned classDimension)
 {
@@ -433,7 +461,7 @@ int GKLSFunction::GKLS_arg_generate(unsigned int nf)
            (error == GKLS_LOCAL_MIN_COINCIDENCE_ERROR));
   error = GKLS_set_basins();
   if (error == GKLS_OK) isArgSet = 1; /* All the parameters are set */
-  /* and the user can evaluate a specific test function or          */
+  /* and the user can Calculate a specific test function or          */
   /* its partial derivative by calling corresponding subroutines    */
 
   return error;
@@ -635,7 +663,7 @@ int GKLSFunction::GKLS_coincidence_check() const
 }
 
 
-double GKLSFunction::EvaluateNDFunction(const double* x) const
+double GKLSFunction::CalculateNDFunction(const double* x) const
 {
   unsigned int i, index;
   double norm, scal, a, rho; /* working variables */
@@ -674,7 +702,7 @@ double GKLSFunction::EvaluateNDFunction(const double* x) const
   return ((1.0 - 2.0 / rho * scal / norm + a / rho / rho)*norm*norm +
           GKLS_minima.f[index]);
 }
-double GKLSFunction::EvaluateDFunction(const double* x) const
+double GKLSFunction::CalculateDFunction(const double* x) const
 {
   unsigned int i, index;
   double norm, scal, a, rho; /* working variables */
@@ -713,7 +741,7 @@ double GKLSFunction::EvaluateDFunction(const double* x) const
   return (2.0 / rho / rho * scal / norm - 2.0*a / rho / rho / rho)*norm*norm*norm +
       (1.0 - 4.0*scal / norm / rho + 3.0*a / rho / rho)*norm*norm + GKLS_minima.f[index];
 }
-double GKLSFunction::EvaluateD2Function(const double* x) const
+double GKLSFunction::CalculateD2Function(const double* x) const
 {
   unsigned int dim, i, index;
   double norm, scal, a, rho; /* working variables */
@@ -757,7 +785,7 @@ double GKLSFunction::EvaluateD2Function(const double* x) const
       norm * norm * norm / rho +
       0.5*delta*norm*norm + GKLS_minima.f[index];
 }
-double GKLSFunction::EvaluateDFunctionDeriv(unsigned var_j, const double* x) const
+double GKLSFunction::CalculateDFunctionDeriv(unsigned var_j, const double* x) const
 {
   unsigned int i, index;
   double norm, scal, dif, a, rho, h; /* working variables */
@@ -802,7 +830,7 @@ double GKLSFunction::EvaluateDFunctionDeriv(unsigned var_j, const double* x) con
           dif * (6.0 / rho / rho*scal - 6.0 / rho / rho / rho*a*norm -
                  8.0 / rho / norm*scal + 6.0 / rho / rho*a + 2.0));
 }
-double GKLSFunction::EvaluateD2FunctionDeriv1(unsigned var_j, const double* x) const
+double GKLSFunction::CalculateD2FunctionDeriv1(unsigned var_j, const double* x) const
 {
   unsigned int i, index;
   double norm, scal, dif, a, rho, h; /* working variables */
@@ -849,7 +877,7 @@ double GKLSFunction::EvaluateD2FunctionDeriv1(unsigned var_j, const double* x) c
                       (-36.0 / rho / norm*scal + 30.0 / rho / rho*a + 9.0 - 4.5*delta) / rho) +
           dif*delta);
 }
-double GKLSFunction::EvaluateD2FunctionDeriv2(unsigned var_j, unsigned var_k, const double* x) const
+double GKLSFunction::CalculateD2FunctionDeriv2(unsigned var_j, unsigned var_k, const double* x) const
 {
   unsigned int i, index;
   double norm, scal, a, rho,
@@ -925,7 +953,7 @@ double GKLSFunction::EvaluateD2FunctionDeriv2(unsigned var_j, unsigned var_k, co
   return dQ_jk;
 }
 
-int GKLSFunction::EvaluateDFunctionGradient(const double* x, double* g) const
+int GKLSFunction::CalculateDFunctionGradient(const double* x, double* g) const
 {
   unsigned int i;
   int error_code = GKLS_OK;
@@ -935,13 +963,13 @@ int GKLSFunction::EvaluateDFunctionGradient(const double* x, double* g) const
 
   for (i = 1; i <= GKLS_dim; i++)
   {
-    g[i - 1] = EvaluateDFunctionDeriv(i, x);
+    g[i - 1] = CalculateDFunctionDeriv(i, x);
     if (g[i - 1] >= GKLS_MAX_VALUE - 1000.0)
       error_code = GKLS_DERIV_EVAL_ERROR;
   }
   return error_code;
 }
-int GKLSFunction::EvaluateD2FunctionGradient(const double* x, double* g) const
+int GKLSFunction::CalculateD2FunctionGradient(const double* x, double* g) const
 {
   unsigned int i;
   int error_code = GKLS_OK;
@@ -951,13 +979,13 @@ int GKLSFunction::EvaluateD2FunctionGradient(const double* x, double* g) const
 
   for (i = 1; i <= GKLS_dim; i++)
   {
-    g[i - 1] = EvaluateD2FunctionDeriv1(i, x);
+    g[i - 1] = CalculateD2FunctionDeriv1(i, x);
     if (g[i - 1] >= GKLS_MAX_VALUE - 1000.0)
       error_code = GKLS_DERIV_EVAL_ERROR;
   }
   return error_code;
 }
-int GKLSFunction::EvaluateD2FunctionHessian(const double* x, double** h) const
+int GKLSFunction::CalculateD2FunctionHessian(const double* x, double** h) const
 {
   unsigned int i, j;
   int error_code = GKLS_OK;
@@ -970,7 +998,7 @@ int GKLSFunction::EvaluateD2FunctionHessian(const double* x, double** h) const
   for (i = 1; i <= GKLS_dim; i++)
     for (j = 1; j <= GKLS_dim; j++)
     {
-      h[i - 1][j - 1] = EvaluateD2FunctionDeriv2(i, j, x);
+      h[i - 1][j - 1] = CalculateD2FunctionDeriv2(i, j, x);
       if (h[i - 1][j - 1] >= GKLS_MAX_VALUE - 1000.0)
         error_code = GKLS_DERIV_EVAL_ERROR;
     }

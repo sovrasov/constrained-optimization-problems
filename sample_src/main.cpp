@@ -5,51 +5,21 @@
 
 #include <iostream>
 
-class GKLSDProxy
-{
-protected:
-  gklsfunction::GKLSFunction* mPFunction;
-
-public:
-  GKLSDProxy(gklsfunction::GKLSFunction* function) :
-    mPFunction(function)
-  {}
-
-  double Calculate(const double* y)
-  {
-    return mPFunction->EvaluateDFunction(y);
-  }
-
-  void GetDomainBounds(double* lb, double* ub)
-  {
-    mPFunction->GetDomainBounds(lb, ub);
-  }
-
-  double GetOptimalValue() const
-  {
-    return mPFunction->GetGlobalMinimumValue();
-  }
-
-  int GetDimension() const
-  {
-    return mPFunction->GetDimension();
-  }
-};
-
 int main(int argc, char** argv)
 {
   gklsfunction::GKLSFunction objective, constraint;
-  objective.SetFunctionClass(gklsfunction::Simple, 2);
-  constraint.SetFunctionClass(gklsfunction::Simple, 2);
+  objective.SetFunctionClass(gklsfunction::Hard, 2);
+  objective.SetType(gklsfunction::TD);
+  constraint.SetFunctionClass(gklsfunction::Hard, 2);
+  constraint.SetType(gklsfunction::TD);
   objective.SetFunctionNumber(1);
   constraint.SetFunctionNumber(2);
 
-  ConstrainedProblemGenerator<GKLSDProxy> generator;
-  GKLSDProxy pObjective(&objective), pConstraint(&constraint);
-  generator.SetObjective(&pObjective);
-  generator.AddConstraint(&pConstraint, 0.01);
+  ConstrainedProblemGenerator<gklsfunction::GKLSFunction> generator;
+  generator.SetObjective(&objective);
+  generator.AddConstraint(&constraint, 0.01);
 
-  ConstrainedProblem<GKLSDProxy> problem = generator.GenerateProblem();
+  ConstrainedProblem<gklsfunction::GKLSFunction> problem = generator.GenerateProblem();
   std::cout << "GKLS RHS = " << problem.GetFunctionRHS(0) << "\n";
 
   vagrisfunction::GrishaginFunction gObjective, gConstraint;

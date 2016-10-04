@@ -77,6 +77,7 @@ namespace gklsfunction
   } T_GKLS_GlobalMinima;
 
   enum GKLSClass { Hard, Simple };
+	enum GKLSFuncionType { TND, TD, TD2 };
 
 	struct GKLSParameters
 	{
@@ -85,15 +86,18 @@ namespace gklsfunction
     unsigned numberOfLocalMinima;
     double globalDistance;
     double globalRadius;
+		GKLSFuncionType type;
 
 		GKLSParameters() {}
 		GKLSParameters(unsigned _dimension, double _globalMinimumValue,
 									 unsigned _numberOfLocalMinima, double _globalDistance,
-								 	 double _globalRadius) : dimension(_dimension),
+								 	 double _globalRadius, GKLSFuncionType _type) :
+									 dimension(_dimension),
 									 globalMinimumValue(_globalMinimumValue),
 									 numberOfLocalMinima(_numberOfLocalMinima),
 									 globalDistance(_globalDistance),
-									 globalRadius(_globalRadius)
+									 globalRadius(_globalRadius),
+									 type(_type)
 		{}
 	};
 
@@ -104,6 +108,7 @@ namespace gklsfunction
     unsigned mDimension;
     bool mIsGeneratorMemoryAllocated;
     bool mIsDomainMemeoryAllocated;
+		GKLSFuncionType mFunctionType;
     gklsfunction::randomgenerator::GKLSRandomGenerator mRndGenerator;
 
     /*-------------- Variables accessible by the user --------------------- */
@@ -154,28 +159,31 @@ namespace gklsfunction
     int SetFunctionNumber(int number);
     int GetFunctionNumber() const;
     PROPERTY(unsigned, Dimension);
-    PROPERTY(double, GlobalMinimumValue);
+    PROPERTY(double, OptimalValue);
     PROPERTY(unsigned, NumberOfLocalMinima);
     PROPERTY(double, GlobalDistance);
-    PROPERTY(double, GlobalRadius);
+		PROPERTY(double, GlobalRadius);
+    PROPERTY(GKLSFuncionType, Type);
 		PROPERTY(GKLSParameters, Parameters);
 
     void SetDefaultParameters();
     int CheckParameters() const;
     void SetFunctionClass(GKLSClass type, unsigned dimension);
 
-    double EvaluateNDFunction(const double* x) const;
-    double EvaluateDFunction(const double* x) const;
-    double EvaluateD2Function(const double* x) const;
+		double Calculate(const double* x) const;
 
-    double EvaluateDFunctionDeriv(unsigned var_j, const double* x) const;
-    double EvaluateD2FunctionDeriv1(unsigned var_j, const double* x) const;
-    double EvaluateD2FunctionDeriv2(unsigned var_j, unsigned var_k, const double* x) const;
+    double CalculateNDFunction(const double* x) const;
+    double CalculateDFunction(const double* x) const;
+    double CalculateD2Function(const double* x) const;
 
-    int EvaluateDFunctionGradient(const double* x, double* g) const;
-    int EvaluateD2FunctionGradient(const double* x, double* g) const;
+    double CalculateDFunctionDeriv(unsigned var_j, const double* x) const;
+    double CalculateD2FunctionDeriv1(unsigned var_j, const double* x) const;
+    double CalculateD2FunctionDeriv2(unsigned var_j, unsigned var_k, const double* x) const;
 
-    int EvaluateD2FunctionHessian(const double* x, double** h) const;
+    int CalculateDFunctionGradient(const double* x, double* g) const;
+    int CalculateD2FunctionGradient(const double* x, double* g) const;
+
+    int CalculateD2FunctionHessian(const double* x, double** h) const;
 
     int GetGlobalMinimumPoint(double* argmin) const;
 		void GetDomainBounds(double* lowerBound, double* upperBound);
