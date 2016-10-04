@@ -19,12 +19,12 @@ protected:
   std::vector<double> mConstraintsParams;
   std::vector<bool>   mNeedTuneParam;
 
-  double CalculateRHS(FType* function, double delta, double objectiveMin)
+  double CalculateRHS(FType* function, double delta, const double* objectiveMin)
   {
     double rhs;
     double Epsilon = 0.01;
     int m = 100;
-    int dimension = function->GetDimension();
+    unsigned dimension = function->GetDimension();
     double hmin = function->GetOptimalValue();
 
     double hmax = hmin;
@@ -109,8 +109,10 @@ protected:
       dm += 0.1;
     dm = dm * (hmax - hmin);
 
-    if (rhs < objectiveMin)
-      rhs = objectiveMin + dm;
+    double criticalValue = function->Calculate(objectiveMin);
+
+    if (rhs < criticalValue)
+      rhs = criticalValue + dm;
 
     delete[] size;
     delete[] step;
@@ -146,11 +148,13 @@ public:
 
   ConstrainedProblem<FType> GenerateProblem()
   {
-    double objectiveMinVal = mPObjective->GetOptimalValue();
+    std::vector<double> objectiveArgMin(mPObjective->GetDimension());
+    mPObjective->GetOptimumCoordinates(&objectiveArgMin.front());
+
     for(unsigned i = 0; i < mPConstraints.size(); i++)
     {
       if(mNeedTuneParam[i])
-        mConstraintsParams[i] = CalculateRHS(mPConstraints[i], mConstraintsParams[i], objectiveMinVal);
+        mConstraintsParams[i] = CalculateRHS(mPConstraints[i], mConstraintsParams[i], &objectiveArgMin.front());
     }
 
     return ConstrainedProblem<FType>(mPObjective, mPConstraints, mConstraintsParams);

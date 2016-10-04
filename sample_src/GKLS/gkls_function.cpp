@@ -1004,7 +1004,7 @@ int GKLSFunction::CalculateD2FunctionHessian(const double* x, double** h) const
     }
   return error_code;
 }
-int GKLSFunction::GetGlobalMinimumPoint(double* argmin) const
+int GKLSFunction::GetOptimumCoordinates(double* argmin) const
 {
   if (isArgSet == 1)
   {

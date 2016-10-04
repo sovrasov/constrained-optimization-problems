@@ -185,7 +185,7 @@ namespace gklsfunction
 
     int CalculateD2FunctionHessian(const double* x, double** h) const;
 
-    int GetGlobalMinimumPoint(double* argmin) const;
+    int GetOptimumCoordinates(double* argmin) const;
 		void GetDomainBounds(double* lowerBound, double* upperBound);
   };
 }
