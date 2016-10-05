@@ -33,7 +33,7 @@ public:
 };
 
 template <class FType>
-void ConstrainedProblemGenerator<FType>::AddConstraint(FType* function, double parameter, int mode = DELTA)
+void ConstrainedProblemGenerator<FType>::AddConstraint(FType* function, double parameter, int mode)
 {
   mPConstraints.push_back(function);
   mConstraintsParams.push_back(parameter);
