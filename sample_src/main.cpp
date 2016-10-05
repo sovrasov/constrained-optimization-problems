@@ -22,15 +22,15 @@ int main(int argc, char** argv)
   ConstrainedProblem<gklsfunction::GKLSFunction> problem = generator.GenerateProblem();
   std::cout << "GKLS RHS = " << problem.GetFunctionRHS(0) << "\n";
 
-  vagrisfunction::GrishaginFunction gObjective, gConstraint;
-  gObjective.SetFunctionNumber(1);
-  gConstraint.SetFunctionNumber(2);
+  GrishaginFunction gObjective, gConstraint;
+  gObjective.SetFunctionNumber(2);
+  gConstraint.SetFunctionNumber(1);
 
-  ConstrainedProblemGenerator<vagrisfunction::GrishaginFunction> gGenerator;
+  ConstrainedProblemGenerator<GrishaginFunction> gGenerator;
   gGenerator.SetObjective(&gObjective);
-  gGenerator.AddConstraint(&gConstraint, 0.9);
+  gGenerator.AddConstraint(&gConstraint, 0.1);
 
-  ConstrainedProblem<vagrisfunction::GrishaginFunction> gProblem = gGenerator.GenerateProblem();
+  ConstrainedProblem<GrishaginFunction> gProblem = gGenerator.GenerateProblem();
   std::cout << "Grishagin RHS = " << gProblem.GetFunctionRHS(0) << "\n";
 
   return 0;
