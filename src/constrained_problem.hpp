@@ -10,21 +10,19 @@ protected:
 
   FType* mPObjective;
   std::vector<FType*> mPConstraints;
-  std::vector<double> mConstraintsParams;
+  std::vector<double> mConstraintsRHS;
 
 public:
   explicit ConstrainedProblem(FType* objective,
                               const std::vector<FType*>& constraints,
-                              const std::vector<double>& parameters)
+                              const std::vector<double>& constraintsRHS) :
+    mPObjective(objective), mPConstraints(constraints), mConstraintsRHS(constraintsRHS)
   {
-    mPConstraints = constraints;
-    mPObjective = objective;
-    mConstraintsParams = parameters;
   }
 
   double GetFunctionRHS(int fNumber) const
   {
-    return mConstraintsParams[fNumber];
+    return mConstraintsRHS[fNumber];
   }
 
   int GetDimension() const
@@ -45,7 +43,7 @@ public:
   double CalculateFunction(const double* y, int fNumber)
   {
     if(fNumber != static_cast<int>(mPConstraints.size()))
-      return mPConstraints[fNumber]->Calculate(y) - mConstraintsParams[fNumber];
+      return mPConstraints[fNumber]->Calculate(y) - mConstraintsRHS[fNumber];
     else
       return mPObjective->Calculate(y);
   }
