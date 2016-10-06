@@ -1,6 +1,6 @@
 #include "gkls_random.hpp"
 
-using namespace gklsfunction::randomgenerator;
+using namespace gkls::randomgenerator;
 
 GKLSRandomGenerator::GKLSRandomGenerator(){}
 

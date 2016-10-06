@@ -7,31 +7,31 @@
 
 int main(int argc, char** argv)
 {
-  gklsfunction::GKLSFunction objective, constraint;
-  objective.SetFunctionClass(gklsfunction::Hard, 2);
-  objective.SetType(gklsfunction::TD);
-  constraint.SetFunctionClass(gklsfunction::Hard, 2);
-  constraint.SetType(gklsfunction::TD);
+  gkls::GKLSFunction objective, constraint;
+  objective.SetFunctionClass(gkls::Hard, 2);
+  objective.SetType(gkls::TD);
+  constraint.SetFunctionClass(gkls::Hard, 2);
+  constraint.SetType(gkls::TD);
   objective.SetFunctionNumber(1);
   constraint.SetFunctionNumber(2);
 
-  ConstrainedProblemGenerator<gklsfunction::GKLSFunction> generator;
+  ConstrainedProblemGenerator<gkls::GKLSFunction> generator;
   generator.SetObjective(&objective);
   generator.AddConstraint(&constraint, 0.01);
 
-  ConstrainedProblem<gklsfunction::GKLSFunction> problem = generator.GenerateProblem();
-  std::cout << "GKLS RHS = " << problem.GetFunctionRHS(0) << "\n";
+  ConstrainedProblem<gkls::GKLSFunction> problem = generator.GenerateProblem();
+  std::cout << "GKLS constraint RHS = " << problem.GetFunctionRHS(0) << "\n";
 
-  GrishaginFunction gObjective, gConstraint;
+  vargish::GrishaginFunction gObjective, gConstraint;
   gObjective.SetFunctionNumber(2);
   gConstraint.SetFunctionNumber(1);
 
-  ConstrainedProblemGenerator<GrishaginFunction> gGenerator;
+  ConstrainedProblemGenerator<vargish::GrishaginFunction> gGenerator;
   gGenerator.SetObjective(&gObjective);
   gGenerator.AddConstraint(&gConstraint, 0.1);
 
-  ConstrainedProblem<GrishaginFunction> gProblem = gGenerator.GenerateProblem();
-  std::cout << "Grishagin RHS = " << gProblem.GetFunctionRHS(0) << "\n";
+  ConstrainedProblem<vargish::GrishaginFunction> gProblem = gGenerator.GenerateProblem();
+  std::cout << "Grishagin constraint RHS = " << gProblem.GetFunctionRHS(0) << "\n";
 
   return 0;
 }

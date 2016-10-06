@@ -6,6 +6,8 @@
 
 #include "grishagin_function.hpp"
 
+using namespace vagrish;
+
 static const double rand_minimums[] = {
   0.603052, 0.408337, /*f(min1)=-13.51436*/
   0.652988, 0.320592, /*f(min2)=-11.28447*/

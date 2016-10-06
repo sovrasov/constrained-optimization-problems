@@ -45,7 +45,7 @@
 	T Get ## N() const;     \
 	void Set ## N(T value);
 
-namespace gklsfunction
+namespace gkls
 {
   /* Penalty value of the generated function if x is not in D */
 #define GKLS_MAX_VALUE        1E+100
@@ -147,7 +147,7 @@ namespace gklsfunction
     bool mIsGeneratorMemoryAllocated;
     bool mIsDomainMemeoryAllocated;
 		GKLSFuncionType mFunctionType;
-    gklsfunction::randomgenerator::GKLSRandomGenerator mRndGenerator;
+    gkls::randomgenerator::GKLSRandomGenerator mRndGenerator;
 
     /*-------------- Variables accessible by the user --------------------- */
     double *GKLS_domain_left; /* left boundary vector of D  */

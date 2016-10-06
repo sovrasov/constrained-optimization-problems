@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <malloc.h>
 
-using namespace gklsfunction;
+using namespace gkls;
 
 GKLSFunction::GKLSFunction()
 {

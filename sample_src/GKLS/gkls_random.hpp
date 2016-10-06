@@ -1,7 +1,7 @@
 #ifndef __GKLS_RANDOM_HPP__
 #define __GKLS_RANDOM_HPP__
 
-namespace gklsfunction
+namespace gkls
 {
   namespace randomgenerator{
 #define KK 100                     /* the long lag */
