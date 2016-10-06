@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <omp.h>
 
 #include "constrained_problem.hpp"
 
@@ -85,13 +86,15 @@ double ConstrainedProblemGenerator<FType>::CalculateRHS(FType* function, double 
     sumn *= (size[i]);
   }
   double* f = new double[sumn];//значение функции
-  double* y = new double[dimension];
+  double* yArray = new double[dimension*omp_get_max_threads()];
 
+#pragma omp parallel for num_threads(omp_get_max_threads())
   for (int i = 0; i < sumn; i++)
   {
     double w;
     int z = i;
-    //Вычисляе координаты точек испытания
+    double* y = yArray + omp_get_thread_num()*dimension;
+    //Вычисляем координаты точки испытания
     for (unsigned j = 0; j < dimension; j++)
     {
       w = z % size[j];//определяем номер узла на i-ой размерности
@@ -159,7 +162,7 @@ double ConstrainedProblemGenerator<FType>::CalculateRHS(FType* function, double 
   delete[] a;
   delete[] b;
   delete[] f;
-  delete[] y;
+  delete[] yArray;
 
   delete[] h1;
   delete[] h2;

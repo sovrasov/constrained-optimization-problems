@@ -4,6 +4,12 @@ set(PROJECT_NAME_STR builder_sample)
 
 project (${PROJECT_NAME_STR})
 
+if (GNU)
+  add_definitions(-fopenmp)
+elseif (MSVC)
+  add_definitions(/EHsc /openmp)
+endif()
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 file(GLOB SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/sample_src/*.cpp
